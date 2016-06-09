@@ -1,0 +1,25 @@
+﻿NWO Share-Alike Software License 1.0 (NWO-SA-1)
+
+Attribution (a) 2016 The Ruge Project (http://ruge.metasmug.com/)
+Sub-Attribution (a) (n/a)
+
+I agree to absolve the author(s) of this software of any legal
+claims arising from my expectations or experiences with the 
+software.
+
+I may distribute the unmodified software freely, including 
+commercially, so long as I retain this notice intact.
+
+I may create derivitive works under the following conditions:
+
+	- I will not claim any type of endorsement from the original
+	  attribution holder.
+
+	- I will make the modified source code easily accessible to the
+	  end user.
+	  
+	- I will add my contact information to this license as follows:
+		Sub-Attribution (a) <year> <author>
+
+	- I will otherwise leave this notice intact and will include it
+	  with any copies I distribute.

@@ -1,0 +1,7 @@
+{{namespace}}
+{{displayName}}
+{{version}}
+{{publisher}}
+{{installGuid}}
+{{releaseDir}}
+{{deployDir}}

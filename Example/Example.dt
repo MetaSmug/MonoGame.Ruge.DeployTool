@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<Settings>
+  <ShowConsole>true</ShowConsole>
+  <ProjectSettings>
+    <AssemblyInfo>C:\Projects\Ruge\Deploy Tool\Example\Source\Ruge.DeployTest\Properties\AssemblyInfo.cs</AssemblyInfo>
+    <ReleaseFolder>C:\Projects\Ruge\Deploy Tool\Example\Source\Ruge.DeployTest\bin\DesktopGL\x86\Release</ReleaseFolder>
+    <DeployFolder>C:\Projects\Ruge\Deploy Tool\Example\Deploy</DeployFolder>
+  </ProjectSettings>
+  <SourceSettings>
+    <SourceFolder>C:\Projects\Ruge\Deploy Tool\Example\Source</SourceFolder>
+    <IgnoreFolders>bin, obj, .vs, .git</IgnoreFolders>
+    <SourceChecked>true</SourceChecked>
+  </SourceSettings>
+  <WindowsSettings>
+    <InnoSetupBinary>C:\Program Files (x86)\Inno Setup 5\Compil32.exe</InnoSetupBinary>
+    <SetupGUID>22f5c872-5382-45f4-8f6a-c4c7c9327b50</SetupGUID>
+    <IconWindows>C:\Projects\Ruge\Deploy Tool\Example\Source\icon.ico</IconWindows>
+    <DeployWinSetup>true</DeployWinSetup>
+    <DeployWinPortable>true</DeployWinPortable>
+  </WindowsSettings>
+  <LinuxSettings>
+    <DeployLinux>true</DeployLinux>
+  </LinuxSettings>
+  <OSXSettings>
+    <IconOSX>C:\Projects\Ruge\Deploy Tool\Example\Source\icon.icns</IconOSX>
+    <DeployOSX>true</DeployOSX>
+  </OSXSettings>
+</Settings>
