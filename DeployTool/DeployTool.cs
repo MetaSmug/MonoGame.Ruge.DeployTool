@@ -18,7 +18,7 @@ namespace RugeDeployTool {
 
         private string libPath;
 
-        public DeployTool() {
+        public DeployTool(string[] args) {
             InitializeComponent();
 
             libPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Ruge Deploy Tool\\lib";
@@ -30,6 +30,8 @@ namespace RugeDeployTool {
             groupBox3.Paint += groupBox_Paint;
             groupBox4.Paint += groupBox_Paint;
             groupBox7.Paint += groupBox_Paint;
+
+            if (args.Length > 0) OpenFile(args[0]);
         }
 
 
@@ -109,58 +111,64 @@ namespace RugeDeployTool {
 
         }
 
+        private void OpenFile(string filename) {
+            
+            ClearData();
+
+            Text = "Ruge Deploy Tool - " + filename;
+
+            var textReader = new XmlTextReader(filename);
+            textReader.ReadToFollowing("ShowConsole");
+            chkShowConsole.Checked = bool.Parse(textReader.ReadElementContentAsString());
+
+            // ProjectSettings
+            textReader.ReadToFollowing("AssemblyInfo");
+            textAssemblyFile.Text = textReader.ReadElementContentAsString();
+            textReader.ReadToFollowing("ReleaseFolder");
+            textReleaseFolder.Text = textReader.ReadElementContentAsString();
+            textReader.ReadToFollowing("DeployFolder");
+            textDeployFolder.Text = textReader.ReadElementContentAsString();
+
+            // SourceSettings
+            textReader.ReadToFollowing("SourceFolder");
+            textSourceFolder.Text = textReader.ReadElementContentAsString();
+            textReader.ReadToFollowing("IgnoreFolders");
+            textIgnoreFolders.Text = textReader.ReadElementContentAsString();
+            textReader.ReadToFollowing("SourceChecked");
+            chkDeploySource.Checked = bool.Parse(textReader.ReadElementContentAsString());
+
+            // WindowsSettings
+            textReader.ReadToFollowing("InnoSetupBinary");
+            textInnoSetupBinary.Text = textReader.ReadElementContentAsString();
+            textReader.ReadToFollowing("SetupGUID");
+            textSetupGUID.Text = textReader.ReadElementContentAsString();
+            textReader.ReadToFollowing("IconWindows");
+            textIconWindows.Text = textReader.ReadElementContentAsString();
+            textReader.ReadToFollowing("DeployWinSetup");
+            chkDeployWinSetup.Checked = bool.Parse(textReader.ReadElementContentAsString());
+            textReader.ReadToFollowing("DeployWinPortable");
+            chkDeployWinPortable.Checked = bool.Parse(textReader.ReadElementContentAsString());
+
+            // LinuxSettings
+            textReader.ReadToFollowing("DeployLinux");
+            chkDeployLinux.Checked = bool.Parse(textReader.ReadElementContentAsString());
+
+            // OSXSettings
+            textReader.ReadToFollowing("IconOSX");
+            textIconOSX.Text = textReader.ReadElementContentAsString();
+            textReader.ReadToFollowing("DeployOSX");
+            chkDeployOSX.Checked = bool.Parse(textReader.ReadElementContentAsString());
+
+            textReader.Close();
+
+            RefreshMe();
+        }
+
         private void btnOpen_Click(object sender, System.EventArgs e) {
             openFileDialog1.Filter = "DeployTool Files|*.dt";
             var result = openFileDialog1.ShowDialog();
-            if (result == DialogResult.OK) {
-                
-                ClearData();
-                
-                var textReader = new XmlTextReader(openFileDialog1.FileName);
-                textReader.ReadToFollowing("ShowConsole");
-                chkShowConsole.Checked = bool.Parse(textReader.ReadElementContentAsString());
-
-                // ProjectSettings
-                textReader.ReadToFollowing("AssemblyInfo");
-                textAssemblyFile.Text = textReader.ReadElementContentAsString();
-                textReader.ReadToFollowing("ReleaseFolder");
-                textReleaseFolder.Text = textReader.ReadElementContentAsString();
-                textReader.ReadToFollowing("DeployFolder");
-                textDeployFolder.Text = textReader.ReadElementContentAsString();
-
-                // SourceSettings
-                textReader.ReadToFollowing("SourceFolder");
-                textSourceFolder.Text = textReader.ReadElementContentAsString();
-                textReader.ReadToFollowing("IgnoreFolders");
-                textIgnoreFolders.Text = textReader.ReadElementContentAsString();
-                textReader.ReadToFollowing("SourceChecked");
-                chkDeploySource.Checked = bool.Parse(textReader.ReadElementContentAsString());
-
-                // WindowsSettings
-                textReader.ReadToFollowing("InnoSetupBinary");
-                textInnoSetupBinary.Text = textReader.ReadElementContentAsString();
-                textReader.ReadToFollowing("SetupGUID");
-                textSetupGUID.Text = textReader.ReadElementContentAsString();
-                textReader.ReadToFollowing("IconWindows");
-                textIconWindows.Text = textReader.ReadElementContentAsString();
-                textReader.ReadToFollowing("DeployWinSetup");
-                chkDeployWinSetup.Checked = bool.Parse(textReader.ReadElementContentAsString());
-                textReader.ReadToFollowing("DeployWinPortable");
-                chkDeployWinPortable.Checked = bool.Parse(textReader.ReadElementContentAsString());
-
-                // LinuxSettings
-                textReader.ReadToFollowing("DeployLinux");
-                chkDeployLinux.Checked = bool.Parse(textReader.ReadElementContentAsString());
-
-                // OSXSettings
-                textReader.ReadToFollowing("IconOSX");
-                textIconOSX.Text = textReader.ReadElementContentAsString();
-                textReader.ReadToFollowing("DeployOSX");
-                chkDeployOSX.Checked = bool.Parse(textReader.ReadElementContentAsString());
-                
-                textReader.Close();
-
-                RefreshMe();
+            if (result == DialogResult.OK) { 
+                OpenFile(openFileDialog1.FileName);
             }
         }
 
@@ -242,6 +250,7 @@ namespace RugeDeployTool {
         }
 
         private void ClearData() {
+            Text = "Ruge Deploy Tool";
             textAssemblyFile.Text = "";
             textDeployFolder.Text = "";
             textReleaseFolder.Text = "";
