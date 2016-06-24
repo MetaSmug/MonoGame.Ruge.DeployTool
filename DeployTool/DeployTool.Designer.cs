@@ -40,6 +40,7 @@
             this.btnDeployFolder = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabProject = new System.Windows.Forms.TabPage();
+            this.chkDemo = new System.Windows.Forms.CheckBox();
             this.chkShowConsole = new System.Windows.Forms.CheckBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -77,19 +78,22 @@
             this.tabLinux = new System.Windows.Forms.TabPage();
             this.chkDeployLinux = new System.Windows.Forms.CheckBox();
             this.tabOSX = new System.Windows.Forms.TabPage();
-            this.tabSFTP = new System.Windows.Forms.TabPage();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.btnIconOSX = new System.Windows.Forms.Button();
             this.textIconOSX = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.chkDeployOSX = new System.Windows.Forms.CheckBox();
+            this.tabSFTP = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.version = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.textDemoTag = new System.Windows.Forms.TextBox();
             this.groupBox3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -103,13 +107,15 @@
             this.tableLayoutPanel3.SuspendLayout();
             this.tabLinux.SuspendLayout();
             this.tabOSX.SuspendLayout();
-            this.tabSFTP.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
+            this.tabSFTP.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.textDemoTag);
+            this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Controls.Add(this.btnOpen);
             this.groupBox3.Controls.Add(this.btnSave);
             this.groupBox3.Controls.Add(this.tableLayoutPanel1);
@@ -283,6 +289,8 @@
             // 
             // tabProject
             // 
+            this.tabProject.Controls.Add(this.version);
+            this.tabProject.Controls.Add(this.chkDemo);
             this.tabProject.Controls.Add(this.chkShowConsole);
             this.tabProject.Controls.Add(this.groupBox7);
             this.tabProject.Controls.Add(this.btnDeploy);
@@ -295,6 +303,16 @@
             this.tabProject.TabIndex = 3;
             this.tabProject.Text = "Project";
             this.tabProject.UseVisualStyleBackColor = true;
+            // 
+            // chkDemo
+            // 
+            this.chkDemo.AutoSize = true;
+            this.chkDemo.Location = new System.Drawing.Point(228, 406);
+            this.chkDemo.Name = "chkDemo";
+            this.chkDemo.Size = new System.Drawing.Size(80, 28);
+            this.chkDemo.TabIndex = 5;
+            this.chkDemo.Text = "Demo";
+            this.chkDemo.UseVisualStyleBackColor = true;
             // 
             // chkShowConsole
             // 
@@ -706,42 +724,6 @@
             this.tabOSX.Text = "OSX";
             this.tabOSX.UseVisualStyleBackColor = true;
             // 
-            // tabSFTP
-            // 
-            this.tabSFTP.Controls.Add(this.label11);
-            this.tabSFTP.ImageIndex = 4;
-            this.tabSFTP.Location = new System.Drawing.Point(4, 36);
-            this.tabSFTP.Name = "tabSFTP";
-            this.tabSFTP.Size = new System.Drawing.Size(597, 463);
-            this.tabSFTP.TabIndex = 5;
-            this.tabSFTP.Text = "SFTP";
-            this.tabSFTP.UseVisualStyleBackColor = true;
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "Compil32_MAINICON.ico");
-            this.imageList1.Images.SetKeyName(1, "MonoGame.Ruge.ico");
-            this.imageList1.Images.SetKeyName(2, "tux.ico");
-            this.imageList1.Images.SetKeyName(3, "text_code_colored.ico");
-            this.imageList1.Images.SetKeyName(4, "server_into.ico");
-            this.imageList1.Images.SetKeyName(5, "apple blue 3D.ico");
-            this.imageList1.Images.SetKeyName(6, "windows.png");
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.DefaultExt = "DeployTool";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(141, 84);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(398, 20);
-            this.textBox1.TabIndex = 2;
-            // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.tableLayoutPanel4);
@@ -817,6 +799,17 @@
             this.chkDeployOSX.Text = "Deploy OSX";
             this.chkDeployOSX.UseVisualStyleBackColor = true;
             // 
+            // tabSFTP
+            // 
+            this.tabSFTP.Controls.Add(this.label11);
+            this.tabSFTP.ImageIndex = 4;
+            this.tabSFTP.Location = new System.Drawing.Point(4, 36);
+            this.tabSFTP.Name = "tabSFTP";
+            this.tabSFTP.Size = new System.Drawing.Size(597, 463);
+            this.tabSFTP.TabIndex = 5;
+            this.tabSFTP.Text = "SFTP";
+            this.tabSFTP.UseVisualStyleBackColor = true;
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -825,6 +818,57 @@
             this.label11.Size = new System.Drawing.Size(224, 24);
             this.label11.TabIndex = 0;
             this.label11.Text = "(Coming In Future Builds)";
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "Compil32_MAINICON.ico");
+            this.imageList1.Images.SetKeyName(1, "MonoGame.Ruge.ico");
+            this.imageList1.Images.SetKeyName(2, "tux.ico");
+            this.imageList1.Images.SetKeyName(3, "text_code_colored.ico");
+            this.imageList1.Images.SetKeyName(4, "server_into.ico");
+            this.imageList1.Images.SetKeyName(5, "apple blue 3D.ico");
+            this.imageList1.Images.SetKeyName(6, "windows.png");
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.DefaultExt = "DeployTool";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox1.Location = new System.Drawing.Point(141, 84);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(398, 20);
+            this.textBox1.TabIndex = 2;
+            // 
+            // version
+            // 
+            this.version.AutoSize = true;
+            this.version.Location = new System.Drawing.Point(3, 407);
+            this.version.Name = "version";
+            this.version.Size = new System.Drawing.Size(19, 24);
+            this.version.TabIndex = 6;
+            this.version.Text = "v";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(14, 150);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(96, 20);
+            this.label12.TabIndex = 5;
+            this.label12.Text = "Demo Tag:";
+            // 
+            // textDemoTag
+            // 
+            this.textDemoTag.Location = new System.Drawing.Point(156, 147);
+            this.textDemoTag.Name = "textDemoTag";
+            this.textDemoTag.Size = new System.Drawing.Size(100, 26);
+            this.textDemoTag.TabIndex = 6;
+            this.textDemoTag.Text = "DEMO";
             // 
             // DeployTool
             // 
@@ -858,12 +902,12 @@
             this.tabLinux.ResumeLayout(false);
             this.tabLinux.PerformLayout();
             this.tabOSX.ResumeLayout(false);
-            this.tabSFTP.ResumeLayout(false);
-            this.tabSFTP.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
+            this.tabSFTP.ResumeLayout(false);
+            this.tabSFTP.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -935,5 +979,9 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.CheckBox chkDeployOSX;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.CheckBox chkDemo;
+        private System.Windows.Forms.Label version;
+        private System.Windows.Forms.TextBox textDemoTag;
+        private System.Windows.Forms.Label label12;
     }
 }

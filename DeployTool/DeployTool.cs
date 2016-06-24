@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,12 @@ namespace RugeDeployTool {
 
         public DeployTool(string[] args) {
             InitializeComponent();
+            
+            version.Text += FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+            var subVersion = version.Text.Substring(version.Text.LastIndexOf(".") + 1);
+            if (subVersion == "0") version.Text = version.Text.Substring(0, version.Text.LastIndexOf("."));
+            subVersion = version.Text.Substring(version.Text.LastIndexOf(".") + 1);
+            if (subVersion == "0") version.Text = version.Text.Substring(0, version.Text.LastIndexOf("."));
 
             libPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Ruge Deploy Tool\\lib";
 
@@ -120,6 +127,10 @@ namespace RugeDeployTool {
             var textReader = new XmlTextReader(filename);
             textReader.ReadToFollowing("ShowConsole");
             chkShowConsole.Checked = bool.Parse(textReader.ReadElementContentAsString());
+            textReader.ReadToFollowing("Demo");
+            chkDemo.Checked = bool.Parse(textReader.ReadElementContentAsString());
+            textReader.ReadToFollowing("DemoTag");
+            textDemoTag.Text = textReader.ReadElementContentAsString();
 
             // ProjectSettings
             textReader.ReadToFollowing("AssemblyInfo");
@@ -183,12 +194,19 @@ namespace RugeDeployTool {
                 var deployWinPortable = chkDeployWinPortable.Checked ? "true" : "false";
                 var deployLinux = chkDeployLinux.Checked ? "true" : "false";
                 var deployOSX = chkDeployOSX.Checked ? "true" : "false";
+                var demo = chkDemo.Checked ? "true" : "false";
 
                 var textWriter = new XmlTextWriter(saveFileDialog1.FileName, null) {Formatting = Formatting.Indented};
                 textWriter.WriteStartDocument();
                 textWriter.WriteStartElement("Settings");
                     textWriter.WriteStartElement("ShowConsole");
                         textWriter.WriteString(showConsole);
+                    textWriter.WriteEndElement();
+                    textWriter.WriteStartElement("Demo");
+                        textWriter.WriteString(demo);
+                    textWriter.WriteEndElement();
+                    textWriter.WriteStartElement("DemoTag");
+                        textWriter.WriteString(textDemoTag.Text);
                     textWriter.WriteEndElement();
                     textWriter.WriteStartElement("ProjectSettings");
                         textWriter.WriteStartElement("AssemblyInfo");
@@ -301,9 +319,11 @@ namespace RugeDeployTool {
             console.WriteLine("==================================");
             console.WriteLine("Generating Linux Deploy...");
 
-            var zipPath = textDeployFolder.Text + "\\" + textNamespace.Text + "." + textVersion.Text +
-                         ".Linux.tgz";
-            var tempPath = textDeployFolder.Text + "\\Linux\\" + textTitle.Text;
+            var zipPath = textDeployFolder.Text + "\\" + textNamespace.Text + "." + textVersion.Text;
+            if (chkDemo.Checked) zipPath += "." + textDemoTag.Text;
+            zipPath += ".Linux.tgz";
+
+            var tempPath = textDeployFolder.Text + "\\Linux\\" + textNamespace.Text;
 
             var files = Directory.GetFiles(libPath + "\\Kick", "*.*", SearchOption.AllDirectories);
             foreach (var file in files) {
@@ -326,12 +346,13 @@ namespace RugeDeployTool {
                 var fileDir = new FileInfo(tempPath + fileRelative);
                 fileDir.Directory.Create();
 
-                File.Copy(file, tempPath + fileRelative, true);
-
                 console.WriteLine("Copy To Temp: " + file);
+
+                // Kick doesn't like this file and it doesn't seem to break anything to leave it out
+                if (!file.Contains(".exe.config")) File.Copy(file, tempPath + fileRelative, true);
+
             }
-
-
+            
             var fileDump = File.ReadAllText(tempPath + "\\Kick");
             fileDump = fileDump.Replace("{{filename}}", textNamespace.Text);
 
@@ -358,8 +379,9 @@ namespace RugeDeployTool {
             console.WriteLine("==================================");
             console.WriteLine("Generating OSX.app Deploy...");
 
-            var zipPath = textDeployFolder.Text + "\\" + textNamespace.Text + "." + textVersion.Text +
-                         ".OSX.tgz";
+            var zipPath = textDeployFolder.Text + "\\" + textNamespace.Text + "." + textVersion.Text;
+            if (chkDemo.Checked) zipPath += "." + textDemoTag.Text;
+            zipPath += ".OSX.tgz";
             var tempPath = textDeployFolder.Text + "\\OSX\\" + textTitle.Text + ".app";
 
             var files = Directory.GetFiles(libPath + "\\Ruge.app", "*.*", SearchOption.AllDirectories);
@@ -370,9 +392,9 @@ namespace RugeDeployTool {
                 var fileDir = new FileInfo(tempPath + fileRelative);
                 fileDir.Directory.Create();
 
+                console.WriteLine("Copy To Temp: " + file);
                 File.Copy(file, tempPath + fileRelative, true);
 
-                console.WriteLine("Copy To Temp: " + file);
             }
 
 
@@ -405,7 +427,7 @@ namespace RugeDeployTool {
                 var fileDir = new FileInfo(tempPath + "\\Contents\\MacOS" + fileRelative);
                 fileDir.Directory.Create();
 
-                File.Copy(file, tempPath + "\\Contents\\MacOS" + fileRelative, true);
+                if (!file.Contains(".exe.config")) File.Copy(file, tempPath + "\\Contents\\MacOS" + fileRelative, true);
 
                 console.WriteLine("Copy To Temp: " + file);
             }
@@ -425,8 +447,9 @@ namespace RugeDeployTool {
 
             console.WriteLine("==================================");
             console.WriteLine("Generating Windows Portable Deploy...");
-            var zipPath = textDeployFolder.Text + "\\" + textNamespace.Text + "." + textVersion.Text +
-                          ".Windows.Portable.zip";
+            var zipPath = textDeployFolder.Text + "\\" + textNamespace.Text + "." + textVersion.Text;
+            if (chkDemo.Checked) zipPath += "." + textDemoTag.Text;
+            zipPath += ".Windows.Portable.zip";
             var tempPath = textDeployFolder.Text + "\\" + textTitle.Text;
 
             var files = Directory.GetFiles(textReleaseFolder.Text, "*.*", SearchOption.AllDirectories);
@@ -463,6 +486,7 @@ namespace RugeDeployTool {
             fileDump = fileDump.Replace("{{deployDir}}", textDeployFolder.Text);
             fileDump = fileDump.Replace("{{installGuid}}", textSetupGUID.Text);
             fileDump = fileDump.Replace("{{iconFile}}", textIconWindows.Text);
+            fileDump = fileDump.Replace("{{DEMO}}", chkDemo.Checked ? "." + textDemoTag.Text : "");
 
             console.WriteLine("Generating Inno Setup Script...");
             File.WriteAllText(textDeployFolder.Text + "\\Setup.iss", fileDump);
@@ -479,7 +503,9 @@ namespace RugeDeployTool {
 
             console.WriteLine("==================================");
             console.WriteLine("Generating Source Code Archive...");
-            var zipPath = textDeployFolder.Text + "\\" + textNamespace.Text + "." + textVersion.Text + ".Source.tgz";
+            var zipPath = textDeployFolder.Text + "\\" + textNamespace.Text + "." + textVersion.Text;
+            if (chkDemo.Checked) zipPath += "." + textDemoTag.Text;
+            zipPath += ".Source.tgz";
             var tempPath = textDeployFolder.Text + "\\Source\\" + textTitle.Text;
                    
             string[] ignore = textIgnoreFolders.Text.Split(',').Select(sValue => sValue.Trim()).ToArray();
@@ -552,39 +578,15 @@ namespace RugeDeployTool {
             Stream outStream = File.Create(tgzFilename);
             Stream gzoStream = new GZipOutputStream(outStream);
             TarArchive tarArchive = TarArchive.CreateOutputTarArchive(gzoStream);
-
-            // Note that the RootPath is currently case sensitive and must be forward slashes e.g. "c:/temp"
-            // and must not end with a slash, otherwise cuts off first char of filename
-            // This is scheduled for fix in next release
+            
             tarArchive.RootPath = sourceDirectory.Replace('\\', '/');
             if (tarArchive.RootPath.EndsWith("/"))
                 tarArchive.RootPath = tarArchive.RootPath.Remove(tarArchive.RootPath.Length - 1);
 
-            AddDirectoryFilesToTar(tarArchive, sourceDirectory, true);
+            TarEntry tarEntry = TarEntry.CreateEntryFromFile(sourceDirectory);
+            tarArchive.WriteEntry(tarEntry, true);
 
             tarArchive.Close();
-        }
-        private void AddDirectoryFilesToTar(TarArchive tarArchive, string sourceDirectory, bool recurse) {
-
-            // Optionally, write an entry for the directory itself.
-            // Specify false for recursion here if we will add the directory's files individually.
-            //
-            TarEntry tarEntry = TarEntry.CreateEntryFromFile(sourceDirectory);
-            tarArchive.WriteEntry(tarEntry, false);
-
-            // Write each file to the tar.
-            //
-            string[] filenames = Directory.GetFiles(sourceDirectory);
-            foreach (string filename in filenames) {
-                tarEntry = TarEntry.CreateEntryFromFile(filename);
-                tarArchive.WriteEntry(tarEntry, true);
-            }
-
-            if (recurse) {
-                string[] directories = Directory.GetDirectories(sourceDirectory);
-                foreach (string directory in directories)
-                    AddDirectoryFilesToTar(tarArchive, directory, recurse);
-            }
         }
 
 
